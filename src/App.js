@@ -13,17 +13,18 @@ class App extends Component {
     showPersons: false,
   };
 
-  switchNameHandler = (newName) => {
-    // console.log('Was clicked!');
-    // DON'T DO THIS: this.state.persons[0].name = 'Maximilian';
-    this.setState({
-      persons: [
-        { name: newName, age: 28 },
-        { name: 'Manu', age: 29 },
-        { name: 'Stephanie', age: 27 }
-      ]
-    });
-  };
+  // No longer used, but kept for reference
+  // switchNameHandler = (newName) => {
+  //   // console.log('Was clicked!');
+  //   // DON'T DO THIS: this.state.persons[0].name = 'Maximilian';
+  //   this.setState({
+  //     persons: [
+  //       { name: newName, age: 28 },
+  //       { name: 'Manu', age: 29 },
+  //       { name: 'Stephanie', age: 27 }
+  //     ]
+  //   });
+  // };
 
   // This handler changes the second name to whatever is typed into the input with the 'event' and 'target'
   nameChangedHandler = (event) => {
@@ -35,6 +36,14 @@ class App extends Component {
       ]
     });
   };
+
+  // 'persons' are taken from the state, one element is removed (spliced) from 
+  // the array and set the word persons to the new persons here
+  deletePersonHandler = (personIndex) => {
+    const persons = this.state.persons;
+    persons.splice(personIndex, 1);
+    this.setState({persons: persons})
+  }
 
   // Toggles whether div with names should be included
   togglePersonsHandler = () => {
@@ -56,18 +65,12 @@ class App extends Component {
     if (this.state.showPersons) { 
       persons = (
         <div>
-          <Person 
-            name={ this.state.persons[0].name} 
-            age={ this.state.persons[0].age}/>
-          <Person 
-            name={ this.state.persons[1].name} 
-            age={ this.state.persons[1].age}
-            click={this.switchNameHandler.bind(this, 'Max!')} // Makes clicking on Manu's name change Max's name. Below the name changes to whatever is typed in the input.
-            changed={this.nameChangedHandler}>My Hobbies: Racing 
-          </Person>
-          <Person 
-            name={ this.state.persons[2].name} 
-            age={ this.state.persons[2].age}/>
+          {this.state.persons.map((person, index) => {
+            return <Person
+              click={() => this.deletePersonHandler(index)} // Checks the index of the array to see if it matches current person 
+              name={person.name}
+              age={person.age} />
+          })}
         </div>
       );
     }
